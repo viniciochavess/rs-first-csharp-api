@@ -1,4 +1,5 @@
-﻿using communications;
+﻿using api_client.UseCases.Clients;
+using communications;
 using communications.Request;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,17 +27,14 @@ namespace api_client.Controllers
 
         // POST: api/Values
         [HttpPost]
+        [ProducesResponseType(typeof(ResponseClientJson), StatusCodes.Status201Created)]
         public ActionResult<ResponseClientJson> Post([FromBody] RequestClientJson request)
         {
-            var email = request.email;
-            var name = request.name;
-            var ResponseClientJson = new ResponseClientJson
-            {
-                id = Guid.NewGuid(),
-                name = name
-            };
 
-            return Created(string.Empty, ResponseClientJson);
+           var useCase = new RegisterClientUseCase();
+            var response = useCase.Execute(request);
+
+            return Created(string.Empty, response);
         }
     }
 }
